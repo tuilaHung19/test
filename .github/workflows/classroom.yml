@@ -1,0 +1,21 @@
+name: OS Lab Auto Grading
+on: [push]
+
+jobs:
+  grading:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Compile and Run Test
+        run: |
+          gcc src/scheduler.c tests/test_main.c -o run_test
+          ./run_test
+
+      - name: Send Results to Web Dashboard
+        if: always()
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d @result.json \
+          https://webhook.site/9cc5cbfa-cea1-402b-ac78-1368571195dc
